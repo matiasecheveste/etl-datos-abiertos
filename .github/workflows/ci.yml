@@ -1,0 +1,29 @@
+# ETL de datos abiertos — Matías Nicolás Echeveste Cardozo
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "0 9 1 * *" # el día 1 de cada mes procesa la versión vigente del catálogo
+permissions:
+  contents: read
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e ".[dev]"
+      - run: ruff check .
+      - run: pytest -q
+      - name: Procesar el conjunto completo publicado
+        run: python -m etl --descargar --base precios.db --informe informe.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: informe-precios
+          path: |
+            informe.md
+            precios.db
