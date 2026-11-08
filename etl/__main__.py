@@ -15,7 +15,7 @@ import urllib.request
 from pathlib import Path
 
 from .cargar import cargar
-from .informe import informe
+from .informe import informe, periodos_contradictorios
 from .transformar import leer, transformar, variaciones
 
 URL_OFICIAL = (
@@ -47,7 +47,7 @@ def main(argumentos: list[str] | None = None) -> int:
     cargadas = cargar(resultado.precios, args.base)
     print(
         f"Leídas {resultado.filas_leidas} filas · sin cotización {resultado.sin_cotizacion} · "
-        f"duplicadas {resultado.duplicadas} · conflictos {len(resultado.conflictos)} · "
+        f"duplicadas {resultado.duplicadas} · períodos contradictorios {periodos_contradictorios(resultado)} · "
         f"apartados {len(resultado.atipicos)} · cargadas {cargadas}"
     )
     if args.informe:

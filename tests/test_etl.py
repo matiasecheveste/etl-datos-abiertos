@@ -96,4 +96,5 @@ def test_linea_de_comandos(tmp_path, capsys):
     assert "cargadas" in capsys.readouterr().out
     texto = informe.read_text(encoding="utf-8")
     assert "## Resumen por producto" in texto and "SUPER 95 30-S" in texto
+    assert "| Mínimo ($) |" in texto and "| 78,54 |" in texto  # encabezados legibles y coma decimal
     assert isinstance(pd.read_sql("SELECT * FROM variaciones", sqlite3.connect(tmp_path / "p.db")), pd.DataFrame)
